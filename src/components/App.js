@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Route, Redirect, useHistory } from "react-router-dom";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -9,16 +10,28 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import api from "../utils/Api";
 import AddPlacePopup from "./AddPlacePopup";
+import Login from "./Login";
+import Register from "./Register";
+import InfoTooltip from "./InfoTooltip";
+import ProtectedRoute from "./ProtectedRoute";
+import authApi from "../utils/AuthApi";
 
 function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [cards, setCards] = useState([]);
+
+  const [isHeaderEmail, setIsHeaderEmail] = useState("");
+  const [isLuckPopupOpen, setIsLuckPopupOpen] = useState(false);
+  const [isInfoTooltipLuck, setIsInfoTooltipLuck] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     api
@@ -47,6 +60,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard({});
+    setIsLuckPopupOpen(false);
   }
 
   function handleCardLike(card) {
@@ -107,12 +121,95 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
+  function handelRegisterUser(email, password) {
+    authApi
+      .registerUser(email, password)
+      .then((data) => {
+        if (data) {
+          setIsInfoTooltipLuck(true);
+          history.push("/sign-in");
+        }
+      })
+      .catch((err) => {
+        setIsInfoTooltipLuck(false);
+        console.log(err);
+      })
+      .finally(() => setIsLuckPopupOpen(true));
+  }
+
+  function handelAuthUser(email, password) {
+    authApi
+      .loginUser(email, password)
+      .then((data) => {
+        if (data.token) {
+          setIsHeaderEmail(email);
+          setIsLoggedIn(true);
+          localStorage.setItem("jwt", data.token);
+          history.push("/");
+        }
+      })
+      .catch((err) => {
+        setIsInfoTooltipLuck(false);
+        setIsLuckPopupOpen(true);
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      authApi
+        .checkToken(jwt)
+        .then((data) => {
+          if (data) {
+            setIsLoggedIn(true);
+            setIsHeaderEmail(data.data.email);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [history]);
+
+  function handelSignOut() {
+    localStorage.removeItem("jwt");
+    setIsHeaderEmail("");
+    setIsLoggedIn(false);
+    history.push("/sign-in");
+  }
+
+  const isOpen = isEditAvatarPopupOpen
+        || isEditProfilePopupOpen
+        || isAddPlacePopupOpen
+        || isLuckPopupOpen
+        || selectedCard;
+
+  useEffect(() => {
+    function closeOnEscape(evt) {
+      if (evt.key === "Escape") {
+        closeAllPopup();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("keydown", closeOnEscape);
+      return () => document.removeEventListener("keydown", closeOnEscape);
+    }
+  }, [isOpen]);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header
+          signUp="Регистрация"
+          signIn="Войти"
+          signOut="Выйти"
+          onSignOut={handelSignOut}
+          headerEmail={isHeaderEmail}
+        />
 
-        <Main
+        <ProtectedRoute
+          component={Main}
           onEditAvatar={setEditAvatarPopupOpen}
           onEditProfile={setIsEditProfilePopupOpen}
           onAddPlace={setIsAddPlacePopupOpen}
@@ -120,9 +217,29 @@ function App() {
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
           cards={cards}
+          isLoggedIn={isLoggedIn}
+          path="/"
         />
+        {isLoggedIn && <Footer />}
 
-        <Footer />
+        <Route path="/sign-up">
+          <Register
+            title="Регистрация"
+            message="Уже зарегистрированы? Войти"
+            buttonText="Зарегистрироваться"
+            onRegister={handelRegisterUser}
+          />
+        </Route>
+
+        <Route path="/sign-in">
+          <Login title="Вход" buttonText="Войти" onLogin={handelAuthUser} />
+        </Route>
+
+        <Route>
+          {isLoggedIn 
+          ? <Redirect to="/" /> 
+          : <Redirect to="/sign-in" />}
+        </Route>
 
         <ImagePopup card={selectedCard} onClose={closeAllPopup} />
 
@@ -147,6 +264,13 @@ function App() {
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopup}
           onLoading={isLoading}
+        />
+
+       <InfoTooltip
+          isLuck={isInfoTooltipLuck}
+          isOpen={isLuckPopupOpen}
+          onClose={closeAllPopup}
+          name={"luck"}
         />
       </div>
     </CurrentUserContext.Provider>
