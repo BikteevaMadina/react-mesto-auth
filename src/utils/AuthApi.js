@@ -3,28 +3,19 @@ class AuthApi {
     this._baseUrl = options.baseUrl;
     this._headers = options.headers;
   }
-
-  _checkResult(res) {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  }
-
   registerUser(email, password) {
     return fetch(`${this._baseUrl}/signup`, {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ email, password }),
-    }).then(res => this._checkResult(res));
+    }).then((res) => this._checkResult(res));
   }
-
   loginUser(email, password) {
     return fetch(`${this._baseUrl}/signin`, {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify({ email, password }),
-    }).then(res => this._checkResult(res));
+    }).then((res) => this._checkResult(res));
   }
 
   checkToken(token) {
@@ -36,13 +27,20 @@ class AuthApi {
       },
     }).then((res) => this._checkResult(res));
   }
+
+  _checkResult(res) {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
 }
 
 const authApi = new AuthApi({
   baseUrl: "https://auth.nomoreparties.co",
   headers: {
     "Content-Type": "application/json",
-  }
+  },
 });
 
 export default authApi;

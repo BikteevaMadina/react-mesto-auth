@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Redirect, useHistory } from "react-router-dom";
+import { Route, Redirect, useHistory, Switch } from "react-router-dom";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -26,7 +26,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [cards, setCards] = useState([]);
 
-  const [isHeaderEmail, setIsHeaderEmail] = useState("");
+  const [headerEmail, setHeaderEmail] = useState("");
   const [isLuckPopupOpen, setIsLuckPopupOpen] = useState(false);
   const [isInfoTooltipLuck, setIsInfoTooltipLuck] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -121,6 +121,26 @@ function App() {
       .finally(() => setIsLoading(false));
   }
 
+  const isOpen = isEditAvatarPopupOpen
+        || isEditProfilePopupOpen
+        || isAddPlacePopupOpen
+        || isLuckPopupOpen
+        || selectedCard;
+
+  useEffect(() => {
+    function closeOnEscape(evt) {
+      if (evt.key === "Escape") {
+        closeAllPopup();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("keydown", closeOnEscape);
+      return () => document.removeEventListener("keydown", closeOnEscape);
+    }
+  }, [isOpen]);
+
+
   function handelRegisterUser(email, password) {
     authApi
       .registerUser(email, password)
@@ -142,7 +162,7 @@ function App() {
       .loginUser(email, password)
       .then((data) => {
         if (data.token) {
-          setIsHeaderEmail(email);
+          setHeaderEmail(email);
           setIsLoggedIn(true);
           localStorage.setItem("jwt", data.token);
           history.push("/");
@@ -163,7 +183,7 @@ function App() {
         .then((data) => {
           if (data) {
             setIsLoggedIn(true);
-            setIsHeaderEmail(data.data.email);
+            setHeaderEmail(data.data.email);
             history.push("/");
           }
         })
@@ -173,30 +193,12 @@ function App() {
 
   function handelSignOut() {
     localStorage.removeItem("jwt");
-    setIsHeaderEmail("");
+    setHeaderEmail("");
     setIsLoggedIn(false);
     history.push("/sign-in");
   }
 
-  const isOpen = isEditAvatarPopupOpen
-        || isEditProfilePopupOpen
-        || isAddPlacePopupOpen
-        || isLuckPopupOpen
-        || selectedCard;
-
-  useEffect(() => {
-    function closeOnEscape(evt) {
-      if (evt.key === "Escape") {
-        closeAllPopup();
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener("keydown", closeOnEscape);
-      return () => document.removeEventListener("keydown", closeOnEscape);
-    }
-  }, [isOpen]);
-
+  
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -205,7 +207,7 @@ function App() {
           signIn="Войти"
           signOut="Выйти"
           onSignOut={handelSignOut}
-          headerEmail={isHeaderEmail}
+          headerEmail={headerEmail}
         />
 
         <ProtectedRoute
@@ -221,7 +223,7 @@ function App() {
           path="/"
         />
         {isLoggedIn && <Footer />}
-
+<Switch>
         <Route path="/sign-up">
           <Register
             title="Регистрация"
@@ -240,7 +242,7 @@ function App() {
           ? <Redirect to="/" /> 
           : <Redirect to="/sign-in" />}
         </Route>
-
+        </Switch>
         <ImagePopup card={selectedCard} onClose={closeAllPopup} />
 
         <EditProfilePopup

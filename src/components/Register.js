@@ -35,7 +35,7 @@ function Register({ isLoggedIn, onRegister, title, buttonText, message }) {
         type="email"
         value={email}
         className="auth__input"
-        placeholder="Почта"
+        placeholder="Email"
         onChange={handleEmailAlter}
         autoComplete="off"
       />
