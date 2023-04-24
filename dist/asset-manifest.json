@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/BikteevaMadina/react-mesto-auth/static/css/main.47cc4914.css",
+    "main.js": "/BikteevaMadina/react-mesto-auth/static/js/main.981c2d75.js",
+    "static/media/Inter-Medium.woff": "/BikteevaMadina/react-mesto-auth/static/media/Inter-Medium.9053572c46aeb4b16caa.woff",
+    "static/media/Inter-Black.woff": "/BikteevaMadina/react-mesto-auth/static/media/Inter-Black.c6938660eec019fefd68.woff",
+    "static/media/Inter-Regular.woff": "/BikteevaMadina/react-mesto-auth/static/media/Inter-Regular.8c206db99195777c6769.woff",
+    "static/media/Inter-Medium.woff2": "/BikteevaMadina/react-mesto-auth/static/media/Inter-Medium.293fd13dbca5a3e450ef.woff2",
+    "static/media/Inter-Black.woff2": "/BikteevaMadina/react-mesto-auth/static/media/Inter-Black.15ca31c0a2a68f76d2d1.woff2",
+    "static/media/Inter-Regular.woff2": "/BikteevaMadina/react-mesto-auth/static/media/Inter-Regular.c8ba52b05a9ef10f4758.woff2",
+    "static/media/logo_dark.svg": "/BikteevaMadina/react-mesto-auth/static/media/logo_dark.1b8862f13831a1b05747.svg",
+    "static/media/logo.svg": "/BikteevaMadina/react-mesto-auth/static/media/logo.ab0f4b930baa26c3efae.svg",
+    "index.html": "/BikteevaMadina/react-mesto-auth/index.html",
+    "static/media/fail.svg": "/BikteevaMadina/react-mesto-auth/static/media/fail.7c6a020bec681932a2af.svg",
+    "static/media/like.svg": "/BikteevaMadina/react-mesto-auth/static/media/like.f9cbbc232f4ed178be38.svg",
+    "static/media/Garbage.svg": "/BikteevaMadina/react-mesto-auth/static/media/Garbage.823b0cf1b0b7e9cb7cad.svg",
+    "static/media/okey.svg": "/BikteevaMadina/react-mesto-auth/static/media/okey.1b6082f862eac35e2514.svg",
+    "static/media/like_active.svg": "/BikteevaMadina/react-mesto-auth/static/media/like_active.35948469632d0421d697.svg",
+    "static/media/edit_avatar.svg": "/BikteevaMadina/react-mesto-auth/static/media/edit_avatar.a086f758840ae814ecde.svg",
+    "static/media/CloseIcon.svg": "/BikteevaMadina/react-mesto-auth/static/media/CloseIcon.039f1f5203f653b4bacd.svg",
+    "static/media/pancel.svg": "/BikteevaMadina/react-mesto-auth/static/media/pancel.5f7df902c26d761a5259.svg",
+    "static/media/pluse.svg": "/BikteevaMadina/react-mesto-auth/static/media/pluse.9d4893b84ffe6c9d13b3.svg",
+    "main.47cc4914.css.map": "/BikteevaMadina/react-mesto-auth/static/css/main.47cc4914.css.map",
+    "main.981c2d75.js.map": "/BikteevaMadina/react-mesto-auth/static/js/main.981c2d75.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.47cc4914.css",
+    "static/js/main.981c2d75.js"
+  ]
+}
