@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Redirect, useHistory, Switch } from "react-router-dom";
+import { Route, Redirect, useHistory} from "react-router-dom";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -223,7 +223,7 @@ function App() {
           path="/"
         />
         {isLoggedIn && <Footer />}
-<Switch>
+
         <Route path="/sign-up">
           <Register
             title="Регистрация"
@@ -242,7 +242,7 @@ function App() {
           ? <Redirect to="/" /> 
           : <Redirect to="/sign-in" />}
         </Route>
-        </Switch>
+        
         <ImagePopup card={selectedCard} onClose={closeAllPopup} />
 
         <EditProfilePopup

@@ -14,4 +14,3 @@ export default function ProtectedRoute({ component: Component, ...props }) {
     </Route>
   );
 }
-
